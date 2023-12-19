@@ -1,5 +1,5 @@
 import { parseInput } from "../utils/utils";
-import { accumulateTravel, displayGrid, uniqueNodes } from "./utils";
+import { accumulateTravel, highlightGridNodes, uniqueNodes } from "./utils";
 
 export default async function main() {
   const lines = await parseInput("16");
@@ -7,7 +7,7 @@ export default async function main() {
 
   const unique = uniqueNodes(nodes);
 
-  displayGrid([lines.length, lines[0].length], unique);
+  console.log(highlightGridNodes([lines.length, lines[0].length], unique).join("\n"));
   return unique.length;
 }
 

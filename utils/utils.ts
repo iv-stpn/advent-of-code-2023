@@ -107,13 +107,7 @@ export function iterateGrid(lines: string[], condition: GridCondition, onMatch: 
   }
 }
 
-export function getOccurenceIndices(string: string, char: string): number[] {
-  const indices = [];
-  for (let i = 0; i < string.length; i++) if (string.charAt(i) === char) indices.push(i);
-  return indices;
-}
-
-export function getOccurenceCount(string: string, char: string): number {
+export function countOccurences(string: string, char: string): number {
   let count = 0;
   for (let i = 0; i < string.length; i++) if (string.charAt(i) === char) count++;
   return count;
@@ -148,4 +142,34 @@ export function backtrackToLeaves<R, T, C>(
 
 export function manhattanDistance([y1, x1]: [number, number], [y2, x2]: [number, number]) {
   return Math.abs(y1 - y2) + Math.abs(x1 - x2);
+}
+
+export function floodfill(
+  start: [number, number],
+  lines: string[],
+  nodes: [number, number][],
+  char: string,
+  invalid?: (char: string) => boolean,
+) {
+  const queue = [start];
+  const visited = new Set<string>();
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current) throw new Error("Invalid queue.");
+
+    if (visited.has(current.join(","))) continue;
+    visited.add(current.join(","));
+
+    const line = lines[current[0]];
+    if (invalid?.(line[current[1]]) || nodes.some(([line, col]) => line === start[0] && col === start[1])) continue;
+    lines[current[0]] = line.substring(0, current[1]) + char + line.substring(current[1] + 1);
+
+    if (current[0] + 1 < lines.length && !invalid?.(lines[current[0] + 1][current[1]])) {
+      queue.push([current[0] + 1, current[1]]);
+    }
+    if (current[0] - 1 > 0 && !invalid?.(lines[current[0] - 1][current[1]])) queue.push([current[0] - 1, current[1]]);
+    if (current[1] + 1 < line.length && !invalid?.(line[current[1] + 1])) queue.push([current[0], current[1] + 1]);
+    if (current[1] - 1 > 0 && !invalid?.(line[current[1] - 1])) queue.push([current[0], current[1] - 1]);
+  }
 }

@@ -2,7 +2,7 @@
 
 import { AFTER_X, AFTER_Y, BEFORE_X, BEFORE_Y, Offset } from "../utils/utils";
 
-export function displayGrid(size: [number, number], nodes: [number, number][] = []) {
+export function highlightGridNodes(size: [number, number], nodes: [number, number][] = []) {
   const grid = [];
   for (let lineIdx = 0; lineIdx < size[0]; lineIdx++) {
     const line = [];
@@ -14,7 +14,7 @@ export function displayGrid(size: [number, number], nodes: [number, number][] = 
     grid[lineIdx][colIdx] = "#";
   }
 
-  console.log(grid.map((line) => line.join("")).join("\n"));
+  return grid.map((line) => line.join(""));
 }
 
 export function accumulateTravel(

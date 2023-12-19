@@ -1,6 +1,6 @@
 // Utils of part 14
 
-import { getOccurenceCount } from "../utils/utils";
+import { countOccurences } from "../utils/utils";
 
 export function slideRowWise(lines: string[], direction: "left" | "right"): string[] {
   const pad = direction === "left"
@@ -9,7 +9,7 @@ export function slideRowWise(lines: string[], direction: "left" | "right"): stri
 
   for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
     const lineChunks = lines[lineIdx].split("#");
-    lines[lineIdx] = lineChunks.map(chunk => pad("O".repeat(getOccurenceCount(chunk, "O")), chunk.length)).join("#");
+    lines[lineIdx] = lineChunks.map(chunk => pad("O".repeat(countOccurences(chunk, "O")), chunk.length)).join("#");
   }
 
   return lines;
