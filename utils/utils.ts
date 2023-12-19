@@ -2,6 +2,25 @@ export async function parseInput(folder: string, filename = "input.txt") {
   return (await Bun.file(`${folder}/${filename}`).text()).trim().split("\n");
 }
 
+const numbers = "1234567890";
+export const matchNumber = (char: string | undefined) => char && numbers.includes(char) ? char : null;
+
+export const BEFORE_X: [0, -1] = [0, -1];
+export const AFTER_X: [0, 1] = [0, 1];
+export const BEFORE_Y: [-1, 0] = [-1, 0];
+export const AFTER_Y: [1, 0] = [1, 0];
+
+export const offsets = [BEFORE_X, AFTER_X, BEFORE_Y, AFTER_Y];
+export type Offset = typeof offsets[number];
+
+export function invertOffset(direction: Offset): Offset {
+  if (direction === BEFORE_X) return AFTER_X;
+  if (direction === AFTER_X) return BEFORE_X;
+  if (direction === BEFORE_Y) return AFTER_Y;
+  if (direction === AFTER_Y) return BEFORE_Y;
+  throw new Error("Invalid side.");
+}
+
 export function isInteger(number: number) {
   return number === Math.floor(number);
 }
@@ -43,6 +62,13 @@ export function lcm(a: number, b: number) {
   return a * b / gcd(a, b);
 }
 
+export function combinations<T>(array: T[], size = 2): T[][] {
+  if (size === 1) return array.map(item => [item]);
+  return array.flatMap((item, idx) =>
+    combinations(array.slice(idx + 1), size - 1).map(combination => [item, ...combination])
+  );
+}
+
 export function groupBy<T>(array: T[], key: (item: T) => string | number): { [key: string | number]: T[] } {
   const groups: { [key: string | number]: T[] } = {};
   for (const item of array) {
@@ -79,4 +105,47 @@ export function iterateGrid(lines: string[], condition: GridCondition, onMatch: 
       if (condition(lines, lineIdx, colIdx)) onMatch(lines, lineIdx, colIdx);
     }
   }
+}
+
+export function getOccurenceIndices(string: string, char: string): number[] {
+  const indices = [];
+  for (let i = 0; i < string.length; i++) if (string.charAt(i) === char) indices.push(i);
+  return indices;
+}
+
+export function getOccurenceCount(string: string, char: string): number {
+  let count = 0;
+  for (let i = 0; i < string.length; i++) if (string.charAt(i) === char) count++;
+  return count;
+}
+
+export function backtrackToLeaves<R, T, C>(
+  state: T,
+  candidates: C[],
+  initialResult: R,
+  next: (state: T, candidate: C) => T | null,
+  reject: (state: T) => boolean,
+  accept: (state: T) => boolean,
+  accumulate: (state: T, result: R) => R,
+): R {
+  function backtrack(state: T, candidates: C[]) {
+    if (reject(state)) return;
+    if (accept(state)) {
+      initialResult = accumulate(state, initialResult);
+      return;
+    }
+
+    for (const candidate of candidates) {
+      const nextState = next(state, candidate);
+      if (!nextState) continue;
+      backtrack(nextState, candidates);
+    }
+  }
+
+  backtrack(state, candidates);
+  return initialResult;
+}
+
+export function manhattanDistance([y1, x1]: [number, number], [y2, x2]: [number, number]) {
+  return Math.abs(y1 - y2) + Math.abs(x1 - x2);
 }

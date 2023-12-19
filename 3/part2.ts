@@ -1,5 +1,4 @@
-import { matchNumber } from "../utils/matchers";
-import { iterateGrid, parseInput } from "../utils/utils";
+import { iterateGrid, matchNumber, parseInput } from "../utils/utils";
 import { emptyChar } from "./utils";
 
 type Side = "left" | "right" | null;

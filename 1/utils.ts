@@ -1,5 +1,4 @@
-import { matchNumber } from "../utils/matchers";
-import { groupByMultiple } from "../utils/utils";
+import { groupByMultiple, matchNumber } from "../utils/utils";
 
 export const numberStringsMap = {
   "one": "1",

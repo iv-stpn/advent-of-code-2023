@@ -1,4 +1,4 @@
-import { matchNumber } from "../utils/matchers";
+import { matchNumber } from "../utils/utils";
 
 // We can match ball categories with only their first letter, since they're all unique.
 export const categoriesAmounts = { "r": 12, "g": 13, "b": 14 };

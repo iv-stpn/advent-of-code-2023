@@ -1,20 +1,15 @@
 // Utils of part 10
 
-const beforeX: [number, number] = [0, -1];
-const afterX: [number, number] = [0, 1];
-const beforeY: [number, number] = [-1, 0];
-const afterY: [number, number] = [1, 0];
+import { AFTER_X, AFTER_Y, BEFORE_X, BEFORE_Y, invertOffset, Offset } from "../utils/utils";
 
-export const offsets = [beforeX, afterX, beforeY, afterY];
-
-type CharDirection = Set<[number, number]>;
+type CharDirection = Set<Offset>;
 export const charMap: Record<string, CharDirection> = {
-  "|": new Set([beforeY, afterY]),
-  "7": new Set([beforeX, afterY]),
-  "J": new Set([beforeY, beforeX]),
-  "-": new Set([beforeX, afterX]),
-  "F": new Set([afterY, afterX]),
-  "L": new Set([beforeY, afterX]),
+  "|": new Set([BEFORE_Y, AFTER_Y]),
+  "7": new Set([BEFORE_X, AFTER_Y]),
+  "J": new Set([BEFORE_Y, BEFORE_X]),
+  "-": new Set([BEFORE_X, AFTER_X]),
+  "F": new Set([AFTER_Y, AFTER_X]),
+  "L": new Set([BEFORE_Y, AFTER_X]),
 };
 
 const printCharMap: Record<string, string> = {
@@ -54,40 +49,32 @@ function getStart(lines: string[]): [number, number] {
   throw new Error("No start found.");
 }
 
-export function invertDirection(direction: [number, number]): [number, number] {
-  if (direction === beforeX) return afterX;
-  if (direction === afterX) return beforeX;
-  if (direction === beforeY) return afterY;
-  if (direction === afterY) return beforeY;
-  throw new Error("Invalid side.");
-}
-
 function parseStart(start: [number, number], lines: string[]): CharDirection {
-  const sides: [number, number][] = [];
+  const sides: Offset[] = [];
   if (start[0] > 0) {
     const previous = lines[start[0] - 1][start[1]];
-    if (chars.includes(previous) && charMap[previous].has(afterY)) sides.push(afterY);
+    if (chars.includes(previous) && charMap[previous].has(AFTER_Y)) sides.push(AFTER_Y);
   }
 
   if (start[0] < lines.length - 1) {
     const next = lines[start[0] + 1][start[1]];
-    if (chars.includes(next) && charMap[next].has(beforeY)) sides.push(beforeY);
+    if (chars.includes(next) && charMap[next].has(BEFORE_Y)) sides.push(BEFORE_Y);
   }
 
   if (start[1] > 0) {
     const previous = lines[start[0]][start[1] - 1];
-    if (chars.includes(previous) && charMap[previous].has(afterX)) sides.push(afterX);
+    if (chars.includes(previous) && charMap[previous].has(AFTER_X)) sides.push(AFTER_X);
   }
 
   if (start[1] < lines[start[0]].length - 1) {
     const next = lines[start[0]][start[1] + 1];
-    if (chars.includes(next) && charMap[next].has(beforeX)) sides.push(beforeX);
+    if (chars.includes(next) && charMap[next].has(BEFORE_X)) sides.push(BEFORE_X);
   }
 
   if (sides.length < 2) throw new Error("Not enough connecting sides found for start.");
   if (sides.length > 2) throw new Error("Too many connecting sides found for start.");
 
-  return new Set(sides.map(invertDirection));
+  return new Set(sides.map(invertOffset));
 }
 
 const outChar = "O";
@@ -112,7 +99,7 @@ export function followOffset(
   }
 
   let currentChar = lines[lineIdx][colIdx];
-  let previous = invertDirection([...charMap[currentChar]][0]);
+  let previous = invertOffset([...charMap[currentChar]][0]);
 
   do {
     if (!nodes.some((node) => node[0] === lineIdx && node[1] === colIdx)) {
@@ -124,7 +111,7 @@ export function followOffset(
     if (!offsetChar || offsetChar === outChar) return outChar;
     else if (offsetChar === inChar) return inChar;
 
-    const invertPrevious = invertDirection(previous);
+    const invertPrevious = invertOffset(previous);
     const directions = [...charMap[currentChar]];
 
     if (invertPrevious[0] === directions[0][0] && invertPrevious[1] === directions[0][1]) {
@@ -199,7 +186,7 @@ export function parseGraph(lines: string[]): [number, [number, number][]] {
     if (!chars.includes(previousChar)) throw new Error(`Invalid char ${previousChar} at ${currentPrevious}`);
 
     const previousConnections = [...charMap[previousChar]];
-    const invertPrevious = invertDirection(previous);
+    const invertPrevious = invertOffset(previous);
     if (invertPrevious[0] === previousConnections[0][0] && invertPrevious[1] === previousConnections[0][1]) {
       previous = previousConnections[1];
     } else if (invertPrevious[0] === previousConnections[1][0] && invertPrevious[1] === previousConnections[1][1]) {
@@ -215,7 +202,7 @@ export function parseGraph(lines: string[]): [number, [number, number][]] {
     if (!chars.includes(nextChar)) throw new Error(`Invalid char ${nextChar} at ${currentNext}`);
 
     const nextConnections = [...charMap[nextChar]];
-    const invertNext = invertDirection(next);
+    const invertNext = invertOffset(next);
     if (invertNext[0] === nextConnections[0][0] && invertNext[1] === nextConnections[0][1]) {
       next = nextConnections[1];
     } else if (invertNext[0] === nextConnections[1][0] && invertNext[1] === nextConnections[1][1]) {

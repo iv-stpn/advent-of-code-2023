@@ -1,5 +1,4 @@
-import { matchNumber } from "../utils/matchers";
-import { parseInput } from "../utils/utils";
+import { matchNumber, parseInput } from "../utils/utils";
 import { matchFirstAndLast } from "./utils";
 
 // Time complexity: O(n), where n is the length of the input line; Space complexity: O(1)
@@ -16,9 +15,7 @@ function parseLine(line: string): number {
 
 export default async function main() {
   const lines = await parseInput("1");
-  let sum = 0;
-  for (const line of lines) sum += parseLine(line);
-  return sum;
+  return lines.reduce((sum, line) => sum + parseLine(line), 0);
 }
 
 console.log(1.1, await main());

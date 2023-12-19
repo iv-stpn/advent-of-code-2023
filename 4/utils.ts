@@ -1,4 +1,4 @@
-import { matchNumber } from "../utils/matchers";
+import { matchNumber } from "../utils/utils";
 
 const startStringLength = 10; // "Card %3d: ", where %d is the card ID
 export function sliceStart(line: string) {

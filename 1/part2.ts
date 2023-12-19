@@ -17,9 +17,7 @@ function parseLine(line: string): number {
 
 export default async function main() {
   const lines = await parseInput("1");
-  let sum = 0;
-  for (const line of lines) sum += parseLine(line);
-  return sum;
+  return lines.reduce((sum, line) => sum + parseLine(line), 0);
 }
 
 console.log(1.2, await main());

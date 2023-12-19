@@ -1,4 +1,4 @@
-import { matchNumber } from "../utils/matchers";
+import { matchNumber } from "../utils/utils";
 
 export const emptyChar = ".";
 export function matchSpecialCharacter(char: string | undefined): boolean {

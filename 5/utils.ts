@@ -1,4 +1,4 @@
-import { matchNumber } from "../utils/matchers";
+import { matchNumber } from "../utils/utils";
 
 type Map = [start: number, end: number, offset: number];
 type MapSet = Map[];
