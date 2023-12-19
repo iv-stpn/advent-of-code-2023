@@ -1,4 +1,4 @@
-import { backtrackToLeaves, parseInput, totalStepCount } from "../utils/utils";
+import { backtrackToLeaves, parseInput } from "../utils/utils";
 import { isComplete, isInvalid, next, parseLine } from "./utils";
 
 export default async function main() {
@@ -19,7 +19,7 @@ export default async function main() {
       (state, result) => [...result, state],
     );
 
-    console.log(initial, solutions.length, solutions.length, totalStepCount);
+    console.log(initial, solutions.length, solutions.length);
     console.log();
     solutionCount += solutions.length;
   }

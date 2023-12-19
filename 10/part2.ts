@@ -1,5 +1,5 @@
-import { parseInput } from "../utils/utils";
-import { chars, followOffset, invertDirection, isState, offsets, parseGraph, printGrid, propagateNode } from "./utils";
+import { invertOffset, offsets, parseInput } from "../utils/utils";
+import { chars, followOffset, isState, parseGraph, printGrid, propagateNode } from "./utils";
 
 export default async function main() {
   const lines = await parseInput("10");
@@ -41,7 +41,7 @@ export default async function main() {
 
         const offsetChar = lines.at(offsetLineIdx)?.charAt(offsetCharIdx);
         if (offsetChar && chars.includes(offsetChar)) {
-          const state = followOffset([offsetLineIdx, offsetCharIdx], invertDirection(offset), lines, nodes);
+          const state = followOffset([offsetLineIdx, offsetCharIdx], invertOffset(offset), lines, nodes);
           console.log(`Found ${state} at ${lineIdx}, ${charIdx}`);
           propagateNode([lineIdx, charIdx], lines, nodes, state);
           break;
